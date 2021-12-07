@@ -35,7 +35,7 @@
 # COMMAND ----------
 
 # File location and type
-file_location = "/FileStore/tables/loans.csv"
+file_location = "/FileStore/tables/loans-1.csv"
 file_type = "csv"
 
 # CSV options
