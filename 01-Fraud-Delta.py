@@ -35,7 +35,7 @@
 # COMMAND ----------
 
 # File location and type
-file_location = "/FileStore/tables/loans.csv"
+file_location = "/FileStore/tables/loans-1.csv"
 file_type = "csv"
 
 # CSV options
@@ -84,12 +84,12 @@ loan_stats = loan_stats.withColumn('emp_length', trim(regexp_replace(col("emp_le
 
 user = dbutils.notebook.entry_point.getDbutils().notebook().getContext().tags().apply('user')
 # Paths for various Delta tables
-bronze_tbl_path = '/home/{}/lending/bronze/'.format(user)
-silver_tbl_path = '/home/{}/lending/silver/'.format(user)
-merge_tbl_path =  '/home/{}/lending/merge/'.format(user)
-gold_tbl_path  = '/home/{}/lending/gold/'.format(user)
-automl_tbl_path = '/home/{}/lending/automl-silver/'.format(user)
-lending_preds_path = '/home/{}/lending/preds/'.format(user)
+bronze_tbl_path = '/home/{}/lending_date/bronze/'.format(user)
+silver_tbl_path = '/home/{}/lending_data/silver/'.format(user)
+merge_tbl_path =  '/home/{}/lending_data/merge/'.format(user)
+gold_tbl_path  = '/home/{}/lending_data/gold/'.format(user)
+automl_tbl_path = '/home/{}/lending_data/automl-silver/'.format(user)
+lending_preds_path = '/home/{}/lending_data/preds/'.format(user)
 
 
 bronze_tbl_name = 'bronze_lending'
@@ -257,4 +257,14 @@ gold_table = spark.sql('''
 
 # COMMAND ----------
 
+# DBTITLE 1,Without Photon
+# MAGIC %sql
+# MAGIC 
+# MAGIC SELECT COUNT(*) as cnt FROM lending.gold_lending
 
+# COMMAND ----------
+
+# DBTITLE 1,With Photon
+# MAGIC %sql
+# MAGIC 
+# MAGIC SELECT COUNT(*) FROM lending.gold_lending
