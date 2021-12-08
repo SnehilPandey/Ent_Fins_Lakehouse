@@ -48,7 +48,7 @@
 # COMMAND ----------
 
 from pyspark.sql.functions import *
-loan_stats = spark.read.format("delta").load("/home/snehil.pandey@databricks.com/lending_data/gold/") \
+loan_stats = spark.read.format("delta").load("/home/odl_instructor_460789@databrickslabs.com/lending_data/gold/") \
                   .withColumn("loan_amnt", col("loan_amnt").cast("double"))\
                   .withColumn("annual_inc", col("annual_inc").cast("double"))\
                   .withColumn("dti", col("dti").cast("double"))\
