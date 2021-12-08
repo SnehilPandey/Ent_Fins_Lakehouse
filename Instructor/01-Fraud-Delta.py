@@ -162,6 +162,51 @@ silver_table = spark.sql('''
 
 # COMMAND ----------
 
+# MAGIC %md ## ![Delta Lake Tiny Logo](https://pages.databricks.com/rs/094-YMS-629/images/delta-lake-tiny-logo.png) Unified Batch and Streaming Source and Sink
+# MAGIC 
+# MAGIC These cells showcase streaming and batch concurrent queries (inserts and reads)
+# MAGIC * This notebook will run an `INSERT` every 10s against our `loan_stats_delta` table
+# MAGIC * We will run two streaming queries concurrently against this data
+# MAGIC * Note, you can also use `writeStream` but this version is easier to run in DBCE
+
+# COMMAND ----------
+
+# Read the insertion of data
+loan_by_state_readStream = spark.readStream.format("delta").load(silver_tbl_path)
+loan_by_state_readStream.createOrReplaceTempView("loan_by_state_readStream")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select addr_state, sum(`loan_amnt`) as loans from loan_by_state_readStream group by addr_state
+
+# COMMAND ----------
+
+import time
+i = 1
+while i <= 6:
+  # Execute Insert statement
+  insert_sql = "INSERT INTO loan_by_state_delta VALUES ('IA', 450)"
+  spark.sql(insert_sql)
+  print('loan_by_state_delta: inserted new row of data, loop: [%s]' % i)
+    
+  # Loop through
+  i = i + 1
+  time.sleep(10)
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC -- Review current loans within the `loan_by_state_delta` Delta Lake table
+# MAGIC select addr_state, sum(`loan_amnt`) as loans from loan_by_state_delta group by addr_state
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC Observe that the Iowa (middle state) has the largest number of loans due to the recent stream of data. Note that the original loan_by_state_delta table is updated as we're reading loan_by_state_readStream.
+
+# COMMAND ----------
+
 # MAGIC %md ##Going back in time... 
 
 # COMMAND ----------
@@ -246,17 +291,6 @@ gold_table = spark.sql('''
 
 # COMMAND ----------
 
-#Merge Batch & Streaming
-#Delta Cache (cache data locally, enabled by default!)
-#add photon and non photon perf test 
-#add autoloader with unification, time travel 
-#language supported
-#collaborative
-#IDE integration
-#simplicity 
-
-# COMMAND ----------
-
 # DBTITLE 1,Without Photon
 # MAGIC %sql
 # MAGIC 
@@ -268,3 +302,7 @@ gold_table = spark.sql('''
 # MAGIC %sql
 # MAGIC 
 # MAGIC SELECT COUNT(*) FROM lending.gold_lending
+
+# COMMAND ----------
+
+
