@@ -1,4 +1,11 @@
 # Databricks notebook source
+# MAGIC %md
+# MAGIC ## Different Data Roles in an enterprise 
+# MAGIC 
+# MAGIC <img src="https://github.com/RafiKurlansik/laughing-garbanzo/blob/main/step1.png?raw=true">
+
+# COMMAND ----------
+
 # MAGIC %md-sandbox 
 # MAGIC # What we want to do: Score loan to prevent risks..
 # MAGIC 
@@ -197,8 +204,7 @@ while i <= 6:
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC -- Review current loans within the `loan_by_state_delta` Delta Lake table
-# MAGIC select addr_state, sum(`loan_amnt`) as loans from loan_by_state_delta group by addr_state
+# MAGIC SELECT *  from loan_by_state_delta
 
 # COMMAND ----------
 
